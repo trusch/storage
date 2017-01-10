@@ -1,4 +1,4 @@
-package storaged
+package main
 
 import (
 	"encoding/json"
@@ -21,8 +21,8 @@ type Server struct {
 	server *http.Server
 }
 
-// New creates a new webserver
-func New(addr string, store storage.Storage) *Server {
+// NewServer creates a new webserver
+func NewServer(addr string, store storage.Storage) *Server {
 	srv := &http.Server{
 		Addr:           addr,
 		Handler:        nil,

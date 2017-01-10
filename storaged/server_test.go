@@ -1,4 +1,4 @@
-package storaged
+package main
 
 import (
 	"encoding/json"
@@ -23,7 +23,7 @@ func (suite *ServerSuite) SetupSuite() {
 	store, err := meta.NewStorage("leveldb://test-store.db")
 	suite.NoError(err)
 	suite.NotEmpty(store)
-	suite.srv = New(":8080", store)
+	suite.srv = NewServer(":8080", store)
 	go suite.srv.ListenAndServe()
 	time.Sleep(200 * time.Millisecond)
 }
