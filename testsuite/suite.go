@@ -151,7 +151,7 @@ func (suite *Suite) TestRecreateBucket() {
 	err := suite.Store.CreateBucket("bucket-name")
 	suite.NoError(err)
 	err = suite.Store.CreateBucket("bucket-name")
-	suite.Error(err)
+	suite.NoError(err)
 	err = suite.Store.DeleteBucket("bucket-name")
 	suite.NoError(err)
 }

@@ -1,8 +1,6 @@
 package mongodb
 
 import (
-	"errors"
-
 	"github.com/trusch/storage/common"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -72,7 +70,7 @@ func (store *Storage) Delete(bucket, key string) error {
 // CreateBucket creates a bucket
 func (store *Storage) CreateBucket(bucket string) error {
 	if err := store.checkBucket(bucket); err == nil {
-		return common.Error(common.WriteFailed, errors.New("bucket already exists"))
+		return nil
 	}
 	if err := store.db.C(bucket).Insert(bson.M{}); err != nil {
 		return common.Error(common.WriteFailed, err)

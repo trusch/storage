@@ -68,7 +68,7 @@ func (store *Storage) Delete(bucketID, key string) error {
 // CreateBucket creates a bucket
 func (store *Storage) CreateBucket(bucketID string) error {
 	return store.db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucket([]byte(bucketID))
+		_, err := tx.CreateBucketIfNotExists([]byte(bucketID))
 		if err != nil {
 			return common.Error(common.WriteFailed, err)
 		}

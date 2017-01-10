@@ -63,9 +63,6 @@ func (store *Storage) Delete(bucket, key string) error {
 
 // CreateBucket creates a bucket
 func (store *Storage) CreateBucket(bucket string) error {
-	if err := store.checkBucket(bucket); err == nil {
-		return common.Error(common.WriteFailed, err)
-	}
 	err := store.db.Put([]byte(bucket), []byte{}, nil)
 	if err != nil {
 		return common.Error(common.WriteFailed, err)

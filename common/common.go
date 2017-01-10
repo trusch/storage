@@ -5,7 +5,6 @@ import "fmt"
 // DocInfo describes a document
 // It is used for directory listing
 type DocInfo struct {
-	IsDir bool
 	Key   string
 	Value []byte
 }
