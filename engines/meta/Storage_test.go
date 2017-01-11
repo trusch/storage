@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
+	"github.com/trusch/storage/server"
 	"github.com/trusch/storage/testsuite"
 )
 
@@ -57,6 +58,24 @@ func TestFileStorage(t *testing.T) {
 	defer os.RemoveAll("./test-store.db")
 	store, err := NewStorage("file://test-store.db")
 	assert.NoError(t, err)
+	s := &StorageSuite{}
+	s.Store = store
+	suite.Run(t, s)
+	err = store.Close()
+	assert.NoError(t, err)
+	err = store.Close()
+	assert.NoError(t, err)
+}
+
+func TestStoragedStorage(t *testing.T) {
+	baseStore, err := NewStorage("leveldb://test-store.db")
+	assert.NoError(t, err)
+	server := server.New(":8080", baseStore)
+	go server.ListenAndServe()
+	defer server.Stop()
+	store, err := NewStorage("storaged://localhost:8080/project1")
+	assert.NoError(t, err)
+	defer os.RemoveAll("./test-store.db")
 	s := &StorageSuite{}
 	s.Store = store
 	suite.Run(t, s)

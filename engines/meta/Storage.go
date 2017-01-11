@@ -10,6 +10,7 @@ import (
 	"github.com/trusch/storage/engines/file"
 	"github.com/trusch/storage/engines/leveldb"
 	"github.com/trusch/storage/engines/mongodb"
+	"github.com/trusch/storage/engines/storaged"
 )
 
 // Storage creates the apropriate store from an URI
@@ -33,6 +34,10 @@ func NewStorage(uriStr string) (*Storage, error) {
 		base, err = mongodb.NewStorage(uriStr)
 	case "file":
 		base, err = file.NewStorage(uri.Host + uri.Path)
+	case "storaged":
+		base, err = storaged.NewStorage(uriStr)
+	case "sstoraged":
+		base, err = storaged.NewStorage(uriStr)
 	default:
 		err = errors.New("unknown uri scheme, try bolt:// or leveldb://")
 	}
