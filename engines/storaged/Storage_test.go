@@ -21,7 +21,7 @@ func TestStoragedStorage(t *testing.T) {
 	server := server.New(":8080", baseStore)
 	go server.ListenAndServe()
 	defer server.Stop()
-	store, err := NewStorage("storaged://localhost:8080/project1")
+	store, err := NewStorage("storaged://localhost:8080/project1", "sample-token")
 	assert.NoError(t, err)
 	defer os.RemoveAll("./test-store.db")
 	s := &StorageSuite{}
