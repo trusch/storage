@@ -7,6 +7,7 @@ import (
 	"github.com/trusch/storage"
 	"github.com/trusch/storage/common"
 	"github.com/trusch/storage/engines/boltdb"
+	"github.com/trusch/storage/engines/file"
 	"github.com/trusch/storage/engines/leveldb"
 	"github.com/trusch/storage/engines/mongodb"
 )
@@ -30,6 +31,8 @@ func NewStorage(uriStr string) (*Storage, error) {
 		base, err = boltdb.NewStorage(uri.Host + uri.Path)
 	case "mongodb":
 		base, err = mongodb.NewStorage(uriStr)
+	case "file":
+		base, err = file.NewStorage(uri.Host + uri.Path)
 	default:
 		err = errors.New("unknown uri scheme, try bolt:// or leveldb://")
 	}
