@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-	"github.com/trusch/storage/engines/meta"
+	"github.com/trusch/storage/engines/leveldb"
 	"github.com/trusch/storage/server"
 	"github.com/trusch/storage/testsuite"
 )
@@ -16,7 +16,7 @@ type StorageSuite struct {
 }
 
 func TestStoragedStorage(t *testing.T) {
-	baseStore, err := meta.NewStorage("leveldb://test-store.db")
+	baseStore, err := leveldb.NewStorage("./test-store.db")
 	assert.NoError(t, err)
 	server := server.New(":8080", baseStore)
 	go server.ListenAndServe()

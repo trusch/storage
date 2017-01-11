@@ -17,10 +17,11 @@ import (
 type Storage struct {
 	client  *http.Client
 	baseURL string
+	token   string
 }
 
 // NewStorage creates a new storage from a URI
-func NewStorage(uriStr string) (*Storage, error) {
+func NewStorage(uriStr string, token ...string) (*Storage, error) {
 	uri, err := url.Parse(uriStr)
 	if err != nil {
 		return nil, err
@@ -36,7 +37,11 @@ func NewStorage(uriStr string) (*Storage, error) {
 			base = fmt.Sprintf("https://%v/v1%v", uri.Host, uri.Path)
 		}
 	}
-	return &Storage{&http.Client{}, base}, nil
+	t := ""
+	if len(token) > 0 {
+		t = token[0]
+	}
+	return &Storage{&http.Client{}, base, t}, nil
 }
 
 // Put saves a byteslice to the db.
@@ -45,6 +50,9 @@ func (store *Storage) Put(bucket, key string, value []byte) error {
 	req, err := http.NewRequest("PUT", fmt.Sprintf("%v/%v/%v", store.baseURL, bucket, key), bytes.NewReader(value))
 	if err != nil {
 		return common.Error(common.WriteFailed, err)
+	}
+	if store.token != "" {
+		req.Header.Set("Autorization", fmt.Sprintf("bearer %v", store.token))
 	}
 	resp, err := store.client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -58,6 +66,9 @@ func (store *Storage) Get(bucket, key string) ([]byte, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%v/%v/%v", store.baseURL, bucket, key), nil)
 	if err != nil {
 		return nil, common.Error(common.ReadFailed, err)
+	}
+	if store.token != "" {
+		req.Header.Set("Autorization", fmt.Sprintf("bearer %v", store.token))
 	}
 	resp, err := store.client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -76,6 +87,9 @@ func (store *Storage) Delete(bucket, key string) error {
 	if err != nil {
 		return common.Error(common.WriteFailed, err)
 	}
+	if store.token != "" {
+		req.Header.Set("Autorization", fmt.Sprintf("bearer %v", store.token))
+	}
 	resp, err := store.client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		return common.Error(common.WriteFailed, err)
@@ -89,6 +103,9 @@ func (store *Storage) CreateBucket(bucket string) error {
 	if err != nil {
 		return common.Error(common.WriteFailed, err)
 	}
+	if store.token != "" {
+		req.Header.Set("Autorization", fmt.Sprintf("bearer %v", store.token))
+	}
 	resp, err := store.client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		return common.Error(common.WriteFailed, err)
@@ -101,6 +118,9 @@ func (store *Storage) DeleteBucket(bucket string) error {
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%v/%v", store.baseURL, bucket), nil)
 	if err != nil {
 		return common.Error(common.WriteFailed, err)
+	}
+	if store.token != "" {
+		req.Header.Set("Autorization", fmt.Sprintf("bearer %v", store.token))
 	}
 	resp, err := store.client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -125,6 +145,9 @@ func (store *Storage) List(bucket string, opts *common.ListOpts) (chan *common.D
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
 		return nil, common.Error(common.ReadFailed, err)
+	}
+	if store.token != "" {
+		req.Header.Set("Autorization", fmt.Sprintf("bearer %v", store.token))
 	}
 	resp, err := store.client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {

@@ -19,7 +19,7 @@ type Storage struct {
 }
 
 // NewStorage creates a new storage from a URI
-func NewStorage(uriStr string) (*Storage, error) {
+func NewStorage(uriStr string, options ...interface{}) (*Storage, error) {
 	uri, err := url.Parse(uriStr)
 	if err != nil {
 		return nil, err
@@ -37,6 +37,12 @@ func NewStorage(uriStr string) (*Storage, error) {
 	case "storaged":
 		base, err = storaged.NewStorage(uriStr)
 	case "sstoraged":
+		if len(options) > 0 {
+			if token, ok := options[0].(string); ok {
+				base, err = storaged.NewStorage(uriStr, token)
+				break
+			}
+		}
 		base, err = storaged.NewStorage(uriStr)
 	default:
 		err = errors.New("unknown uri scheme, try bolt:// or leveldb://")
