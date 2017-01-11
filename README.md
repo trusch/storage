@@ -20,6 +20,8 @@ It provides basic Key/Value Storage functionality and works from embedded device
 * LevelDB
 * MongoDB
 * BoltDB
+* File-based
+* Storaged
 
 ### API Server
 
