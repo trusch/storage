@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/json"
@@ -21,8 +21,8 @@ type Server struct {
 	server *http.Server
 }
 
-// NewServer creates a new webserver
-func NewServer(addr string, store storage.Storage) *Server {
+// New creates a new webserver
+func New(addr string, store storage.Storage) *Server {
 	srv := &http.Server{
 		Addr:           addr,
 		Handler:        nil,
@@ -162,7 +162,7 @@ func (srv *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	}
 	ch, err := srv.store.List(bucket, &common.ListOpts{Start: start, End: end, Prefix: prefix})
 	if err != nil || ch == nil {
-		log.Print("fail...")
+		log.Print("fail listing bucket")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -173,19 +173,13 @@ func (srv *Server) handleList(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("["))
 	first := true
 	for pair := range ch {
-		doc := map[string]string{
-			"key":   pair.Key,
-			"value": string(pair.Value),
-		}
-		if bs, err := json.Marshal(doc); err == nil {
+		if bs, err := json.Marshal(pair); err == nil {
 			if first {
 				first = false
 			} else {
 				w.Write([]byte{','})
 			}
 			w.Write(bs)
-		} else {
-			log.Print(err)
 		}
 	}
 	w.Write([]byte("]"))

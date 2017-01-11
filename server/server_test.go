@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/json"
@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/suite"
+	"github.com/trusch/storage/common"
 	"github.com/trusch/storage/engines/meta"
 )
 
@@ -23,7 +24,7 @@ func (suite *ServerSuite) SetupSuite() {
 	store, err := meta.NewStorage("leveldb://test-store.db")
 	suite.NoError(err)
 	suite.NotEmpty(store)
-	suite.srv = NewServer(":8080", store)
+	suite.srv = New(":8080", store)
 	go suite.srv.ListenAndServe()
 	time.Sleep(200 * time.Millisecond)
 }
@@ -126,15 +127,15 @@ func (suite *ServerSuite) TestGetRange() {
 
 	res, err = suite.request("GET", "/p1/mybucket", "")
 	suite.NoError(err)
-	slice := make([]map[string]interface{}, 0)
+	slice := make([]*common.DocInfo, 0)
 	decoder := json.NewDecoder(strings.NewReader(res))
 	err = decoder.Decode(&slice)
 	suite.NoError(err)
 	suite.Equal(4, len(slice))
-	suite.Equal("0", slice[0]["value"])
-	suite.Equal("1", slice[1]["value"])
-	suite.Equal("2", slice[2]["value"])
-	suite.Equal("3", slice[3]["value"])
+	suite.Equal("0", string(slice[0].Value))
+	suite.Equal("1", string(slice[1].Value))
+	suite.Equal("2", string(slice[2].Value))
+	suite.Equal("3", string(slice[3].Value))
 }
 
 func (suite *ServerSuite) TestGetRangeWithEvery() {

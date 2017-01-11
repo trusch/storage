@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 
+	"github.com/mholt/caddy/server"
 	"github.com/trusch/storage/engines/meta"
 )
 
@@ -16,7 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	server := NewServer(*listen, store)
+	server := server.New(*listen, store)
 	if err != nil {
 		log.Fatal(err)
 	}
