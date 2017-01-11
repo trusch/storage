@@ -52,6 +52,9 @@ func (suite *Suite) TestListAll() {
 	for i := 0; i < 100; i++ {
 		info, ok := <-ch
 		suite.True(ok)
+		if !ok {
+			suite.FailNow("no data")
+		}
 		expectedKey := fmt.Sprintf("%03d", i)
 		expectedVal := expectedKey
 		suite.Equal(expectedKey, info.Key)
@@ -77,6 +80,9 @@ func (suite *Suite) TestListPrefix() {
 	for i := 10; i < 20; i++ {
 		info, ok := <-ch
 		suite.True(ok)
+		if !ok {
+			suite.FailNow("no data")
+		}
 		expectedKey := fmt.Sprintf("%03d", i)
 		expectedVal := expectedKey
 		suite.Equal(expectedKey, info.Key)
@@ -102,6 +108,9 @@ func (suite *Suite) TestListRange() {
 	for i := 23; i < 100; i++ {
 		info, ok := <-ch
 		suite.True(ok)
+		if !ok {
+			suite.FailNow("no data")
+		}
 		expectedKey := fmt.Sprintf("%03d", i)
 		expectedVal := expectedKey
 		suite.Equal(expectedKey, info.Key)
