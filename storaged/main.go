@@ -4,8 +4,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/mholt/caddy/server"
 	"github.com/trusch/storage/engines/meta"
+	"github.com/trusch/storage/server"
 )
 
 var listen = flag.String("listen", ":80", "listen address")
