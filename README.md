@@ -21,7 +21,9 @@ It provides basic Key/Value Storage functionality and works from embedded device
 * MongoDB
 * BoltDB
 * File-based
+* Memory
 * Storaged
+* Cache (combine two other storage engines)
 
 ### API Server
 
