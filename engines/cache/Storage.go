@@ -24,7 +24,7 @@ func (store *Storage) Put(bucket, key string, value []byte) error {
 	if err := store.first.Put(bucket, key, value); err != nil {
 		return common.Error(common.WriteFailed, errors.New("first level fail"), err)
 	}
-	if err := store.first.Put(bucket, key, value); err != nil {
+	if err := store.second.Put(bucket, key, value); err != nil {
 		return common.Error(common.WriteFailed, errors.New("second level fail"), err)
 	}
 	return nil
@@ -35,6 +35,9 @@ func (store *Storage) Get(bucket, key string) ([]byte, error) {
 	val, err := store.first.Get(bucket, key)
 	if err != nil {
 		val, err = store.second.Get(bucket, key)
+		if err == nil {
+			store.first.Put(bucket, key, val)
+		}
 	}
 	return val, err
 }

@@ -3,12 +3,15 @@ package meta
 import (
 	"errors"
 	"net/url"
+	"strings"
 
 	"github.com/trusch/storage"
 	"github.com/trusch/storage/common"
 	"github.com/trusch/storage/engines/boltdb"
+	"github.com/trusch/storage/engines/cache"
 	"github.com/trusch/storage/engines/file"
 	"github.com/trusch/storage/engines/leveldb"
+	"github.com/trusch/storage/engines/memory"
 	"github.com/trusch/storage/engines/mongodb"
 	"github.com/trusch/storage/engines/storaged"
 )
@@ -26,6 +29,19 @@ func NewStorage(uriStr string, options ...interface{}) (*Storage, error) {
 	}
 	var base storage.Storage
 	switch uri.Scheme {
+	case "memory":
+		base, err = memory.NewStorage()
+	case "cache":
+		parts := strings.Split(uriStr[8:], ",")
+		first, e := NewStorage(parts[0])
+		if e != nil {
+			return nil, e
+		}
+		second, e := NewStorage(parts[1])
+		if e != nil {
+			return nil, e
+		}
+		base, err = cache.NewStorage(first, second)
 	case "leveldb":
 		base, err = leveldb.NewStorage(uri.Host + uri.Path)
 	case "boltdb":

@@ -67,6 +67,18 @@ func TestFileStorage(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestMemoryStorage(t *testing.T) {
+	store, err := NewStorage("memory://")
+	assert.NoError(t, err)
+	s := &StorageSuite{}
+	s.Store = store
+	suite.Run(t, s)
+	err = store.Close()
+	assert.NoError(t, err)
+	err = store.Close()
+	assert.NoError(t, err)
+}
+
 func TestStoragedStorage(t *testing.T) {
 	baseStore, err := NewStorage("leveldb://test-store.db")
 	assert.NoError(t, err)
@@ -76,6 +88,19 @@ func TestStoragedStorage(t *testing.T) {
 	store, err := NewStorage("storaged://localhost:8080/project1")
 	assert.NoError(t, err)
 	defer os.RemoveAll("./test-store.db")
+	s := &StorageSuite{}
+	s.Store = store
+	suite.Run(t, s)
+	err = store.Close()
+	assert.NoError(t, err)
+	err = store.Close()
+	assert.NoError(t, err)
+}
+
+func TestCacheStorage(t *testing.T) {
+	defer os.RemoveAll("./test-store.db")
+	store, err := NewStorage("cache://memory://,leveldb://test-store.db")
+	assert.NoError(t, err)
 	s := &StorageSuite{}
 	s.Store = store
 	suite.Run(t, s)
