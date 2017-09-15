@@ -4,7 +4,6 @@ import (
 	"io"
 
 	"github.com/trusch/storage"
-	"github.com/ulikunitz/xz"
 )
 
 // Compressor is a storage wrapper which applies gzip compression
@@ -23,11 +22,7 @@ func (compressor *Compressor) GetReader(id string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	xzReader, err := xz.NewReader(baseReader)
-	if err != nil {
-		return nil, err
-	}
-	return &storage.ReadCloser{Closer: baseReader, Reader: xzReader}, nil
+	return NewReader(baseReader)
 }
 
 // GetWriter returns a writer
@@ -36,11 +31,7 @@ func (compressor *Compressor) GetWriter(id string) (io.WriteCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	writer, err := xz.NewWriter(baseWriter)
-	if err != nil {
-		return nil, err
-	}
-	return &storage.WriteCloser{Closer: baseWriter, Writer: writer}, nil
+	return NewWriter(baseWriter)
 }
 
 // Has returns whether an entry exists

@@ -1,12 +1,7 @@
 package ecdhe
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
 	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
-	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
@@ -66,50 +61,7 @@ func (encrypter *Encrypter) GetReader(id string) (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	// extract ephemeral public key
-	var (
-		ephLen [1]byte
-		ephPub []byte
-	)
-	_, err = baseReader.Read(ephLen[:1])
-	if err != nil {
-		return nil, err
-	}
-	ephPub = make([]byte, int(ephLen[0]))
-	_, err = baseReader.Read(ephPub[:])
-	if err != nil {
-		return nil, err
-	}
-	x, y := elliptic.Unmarshal(elliptic.P256(), ephPub)
-	ok := elliptic.P256().IsOnCurve(x, y) // Rejects the identity point too.
-	if x == nil || !ok {
-		return nil, errors.New("Invalid public key")
-	}
-
-	// compute shared secret by multiplying ephemeral pubkey with own private key
-	priv := encrypter.key
-	x, _ = priv.Curve.ScalarMult(x, y, priv.D.Bytes())
-	if x == nil {
-		return nil, errors.New("Failed to generate encryption key")
-	}
-	shared := sha256.Sum256(x.Bytes())
-
-	// start AES mode
-	block, err := aes.NewCipher(shared[:])
-	if err != nil {
-		return nil, err
-	}
-	iv := make([]byte, aes.BlockSize)
-	bs, err := baseReader.Read(iv[:])
-	if bs != aes.BlockSize {
-		return nil, errors.New("ciphertext to short")
-	}
-	if err != nil {
-		return nil, err
-	}
-	stream := cipher.NewOFB(block, iv[:])
-	reader := &cipher.StreamReader{S: stream, R: baseReader}
-	return &storage.ReadCloser{Closer: baseReader, Reader: reader}, nil
+	return NewReader(baseReader, encrypter.key)
 }
 
 // GetWriter returns a writer
@@ -123,47 +75,7 @@ func (encrypter *Encrypter) GetWriter(id string) (io.WriteCloser, error) {
 		return nil, err
 	}
 
-	// create ephemeral ec key
-	ephemeral, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	if err != nil {
-		return nil, err
-	}
-
-	// compute shared secret by multiplying the public key with ephemeral private key
-	pub := encrypter.cert.PublicKey.(*ecdsa.PublicKey)
-	x, _ := pub.Curve.ScalarMult(pub.X, pub.Y, ephemeral.D.Bytes())
-	if x == nil {
-		return nil, errors.New("Failed to generate encryption key")
-	}
-	shared := sha256.Sum256(x.Bytes())
-
-	// write ephemeral public key
-	ephPub := elliptic.Marshal(pub.Curve, ephemeral.PublicKey.X, ephemeral.PublicKey.Y)
-	_, err = baseWriter.Write([]byte{byte(len(ephPub))})
-	if err != nil {
-		return nil, err
-	}
-	_, err = baseWriter.Write(ephPub)
-	if err != nil {
-		return nil, err
-	}
-
-	// start AES mode
-	block, err := aes.NewCipher(shared[:])
-	if err != nil {
-		return nil, err
-	}
-	iv := make([]byte, aes.BlockSize)
-	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
-	_, err = baseWriter.Write(iv)
-	if err != nil {
-		return nil, err
-	}
-	stream := cipher.NewOFB(block, iv[:])
-	writer := &cipher.StreamWriter{S: stream, W: baseWriter}
-	return writer, nil
+	return NewWriter(baseWriter, encrypter.cert)
 }
 
 // Has returns whether an entry exists

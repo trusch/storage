@@ -4,7 +4,6 @@ import (
 	"io"
 
 	"github.com/trusch/storage"
-	"github.com/golang/snappy"
 )
 
 // Compressor is a storage wrapper which applies snappy compression
@@ -23,8 +22,7 @@ func (compressor *Compressor) GetReader(id string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	snappyReader := snappy.NewReader(baseReader)
-	return &storage.ReadCloser{Closer: baseReader, Reader: snappyReader}, nil
+	return NewReader(baseReader)
 }
 
 // GetWriter returns a writer
@@ -33,7 +31,7 @@ func (compressor *Compressor) GetWriter(id string) (io.WriteCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &storage.WriteCloser{Closer: baseWriter, Writer: snappy.NewBufferedWriter(baseWriter)}, nil
+	return NewWriter(baseWriter)
 }
 
 // Has returns whether an entry exists

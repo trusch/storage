@@ -1,7 +1,6 @@
 package gzip
 
 import (
-	"compress/gzip"
 	"io"
 
 	"github.com/trusch/storage"
@@ -24,11 +23,7 @@ func (compressor *Compressor) GetReader(id string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	gzipReader, err := gzip.NewReader(baseReader)
-	if err != nil {
-		return nil, err
-	}
-	return &storage.ReadCloser{Closer: baseReader, Reader: gzipReader}, nil
+	return NewReader(baseReader)
 }
 
 // GetWriter returns a writer
@@ -37,11 +32,7 @@ func (compressor *Compressor) GetWriter(id string) (io.WriteCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	w, err := gzip.NewWriterLevel(baseWriter, compressor.level)
-	if err != nil {
-		return nil, err
-	}
-	return &storage.WriteCloser{Closer: baseWriter, Writer: w}, nil
+	return NewWriter(baseWriter, compressor.level)
 }
 
 // Has returns whether an entry exists
