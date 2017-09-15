@@ -1,0 +1,190 @@
+hash: 5947a334e9b20d1fb5186d87200ad1dd61fc4fe0f39e329a2cb6b112304ed2f8
+updated: 2017-09-15T14:26:29.281134089+02:00
+imports:
+- name: cloud.google.com/go
+  version: 5a9e19d4e1e41a734154e44a2132b358afb49a03
+  subpackages:
+  - compute/metadata
+  - iam
+  - internal
+  - internal/optional
+  - internal/version
+  - storage
+- name: github.com/go-ini/ini
+  version: c787282c39ac1fc618827141a1f762240def08a3
+- name: github.com/golang/protobuf
+  version: 11b8df160996e00fd4b55cbaafb3d84ec6d50fa8
+  subpackages:
+  - proto
+  - protoc-gen-go/descriptor
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
+- name: github.com/golang/snappy
+  version: 553a641470496b2327abcac10b36396bd98e45c9
+- name: github.com/googleapis/gax-go
+  version: 317e0006254c44a0ac427cc52a0e083ff0b9622f
+- name: github.com/minio/go-homedir
+  version: 21304a94172ae3a09dee2cd86a12fb6f842138c7
+- name: github.com/minio/minio-go
+  version: 4e0f567303d4cc90ceb055a451959fb9fc391fb9
+  subpackages:
+  - pkg/credentials
+  - pkg/encrypt
+  - pkg/policy
+  - pkg/s3signer
+  - pkg/s3utils
+  - pkg/set
+- name: github.com/sirupsen/logrus
+  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
+- name: github.com/ulikunitz/xz
+  version: 0c6b41e72360850ca4f98dc341fd999726ea007f
+  subpackages:
+  - internal/hash
+  - internal/xlog
+  - lzma
+- name: golang.org/x/crypto
+  version: faadfbdc035307d901e69eea569f5dda451a3ee3
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/net
+  version: 859d1a86bb617c0c20d154590c3c5d3fcb670b07
+  subpackages:
+  - context
+  - context/ctxhttp
+  - html
+  - html/atom
+  - html/charset
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
+- name: golang.org/x/oauth2
+  version: 13449ad91cb26cb47661c1b080790392170385fd
+  subpackages:
+  - google
+  - internal
+  - jws
+  - jwt
+- name: golang.org/x/sys
+  version: 7ddbeae9ae08c6a06a59597f0c9edbc5ff2444ce
+  subpackages:
+  - unix
+  - windows
+- name: golang.org/x/text
+  version: ab5ac5f9a8deb4855a60fab02bc61a4ec770bd49
+  subpackages:
+  - encoding
+  - encoding/charmap
+  - encoding/htmlindex
+  - encoding/internal
+  - encoding/internal/identifier
+  - encoding/japanese
+  - encoding/korean
+  - encoding/simplifiedchinese
+  - encoding/traditionalchinese
+  - encoding/unicode
+  - internal/tag
+  - internal/utf8internal
+  - language
+  - runes
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/api
+  version: 39c3dd417c5a443607650f18e829ad308da08dd2
+  subpackages:
+  - gensupport
+  - googleapi
+  - googleapi/internal/uritemplates
+  - googleapi/transport
+  - internal
+  - iterator
+  - option
+  - storage/v1
+  - transport/http
+- name: google.golang.org/appengine
+  version: d9a072cfa7b9736e44311ef77b3e09d804bfa599
+  subpackages:
+  - internal
+  - internal/app_identity
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/modules
+  - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
+- name: google.golang.org/genproto
+  version: 595979c8a7bf586b2d293fb42246bf91a0b893d9
+  subpackages:
+  - googleapis/api/annotations
+  - googleapis/iam/v1
+  - googleapis/rpc/status
+- name: google.golang.org/grpc
+  version: bb78878767b96d411e740439ac820f118e95ae2f
+  subpackages:
+  - balancer
+  - codes
+  - connectivity
+  - credentials
+  - grpclb/grpc_lb_v1/messages
+  - grpclog
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - resolver
+  - stats
+  - status
+  - tap
+  - transport
+- name: gopkg.in/mgo.v2
+  version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
+  subpackages:
+  - bson
+  - internal/json
+  - internal/sasl
+  - internal/scram
+testImports:
+- name: github.com/onsi/ginkgo
+  version: 9eda700730cba42af70d53180f9dcce9266bc2bc
+  subpackages:
+  - config
+  - internal/codelocation
+  - internal/containernode
+  - internal/failer
+  - internal/leafnodes
+  - internal/remote
+  - internal/spec
+  - internal/spec_iterator
+  - internal/specrunner
+  - internal/suite
+  - internal/testingtproxy
+  - internal/writer
+  - reporters
+  - reporters/stenographer
+  - reporters/stenographer/support/go-colorable
+  - reporters/stenographer/support/go-isatty
+  - types
+- name: github.com/onsi/gomega
+  version: c893efa28eb45626cdaa76c9f653b62488858837
+  subpackages:
+  - format
+  - internal/assertion
+  - internal/asyncassertion
+  - internal/oraclematcher
+  - internal/testingtsupport
+  - matchers
+  - matchers/support/goraph/bipartitegraph
+  - matchers/support/goraph/edge
+  - matchers/support/goraph/node
+  - matchers/support/goraph/util
+  - types
+- name: gopkg.in/yaml.v2
+  version: eb3733d160e74a9c7e442f435eb3bea458e1d19f

@@ -1,0 +1,24 @@
+package: github.com/trusch/storage
+import:
+- package: cloud.google.com/go
+  version: ^0.13.0
+  subpackages:
+  - storage
+- package: github.com/golang/snappy
+- package: github.com/minio/minio-go
+  version: ^3.0.3
+- package: github.com/sirupsen/logrus
+  version: ^1.0.3
+- package: github.com/ulikunitz/xz
+  version: ^0.5.4
+- package: google.golang.org/api
+  subpackages:
+  - iterator
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
+testImport:
+- package: github.com/onsi/ginkgo
+  version: ^1.4.0
+- package: github.com/onsi/gomega
+  version: ^1.2.0
