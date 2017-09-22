@@ -75,7 +75,7 @@ func (encrypter *Encrypter) GetWriter(id string) (io.WriteCloser, error) {
 		return nil, err
 	}
 
-	return NewWriter(baseWriter, encrypter.cert)
+	return NewWriter(baseWriter, encrypter.cert.PublicKey.(*ecdsa.PublicKey))
 }
 
 // Has returns whether an entry exists

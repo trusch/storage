@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"crypto/x509"
 	"errors"
 	"io"
 
@@ -12,7 +11,7 @@ import (
 )
 
 // NewWriter returns a new ecdhe writer
-func NewWriter(base io.Writer, cert *x509.Certificate) (io.WriteCloser, error) {
+func NewWriter(base io.Writer, pubkey *ecdsa.PublicKey) (io.WriteCloser, error) {
 	// create ephemeral ec key
 	ephemeral, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
@@ -20,7 +19,7 @@ func NewWriter(base io.Writer, cert *x509.Certificate) (io.WriteCloser, error) {
 	}
 
 	// compute shared secret by multiplying the public key with ephemeral private key
-	pub := cert.PublicKey.(*ecdsa.PublicKey)
+	pub := pubkey
 	x, _ := pub.Curve.ScalarMult(pub.X, pub.Y, ephemeral.D.Bytes())
 	if x == nil {
 		return nil, errors.New("Failed to generate encryption key")
